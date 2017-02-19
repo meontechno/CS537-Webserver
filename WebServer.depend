@@ -1,0 +1,91 @@
+# depslib dependency file v1.0
+1487477705 source:/home/pi/csusm/cs537/CS537-Webserver/WebServer/Request.cpp
+	"Request.h"
+
+1487476344 /home/pi/csusm/cs537/CS537-Webserver/WebServer/Request.h
+
+1487479353 source:/home/pi/csusm/cs537/CS537-Webserver/WebServer/RequestProcessor.cpp
+	"RequestProcessor.h"
+
+1487479184 /home/pi/csusm/cs537/CS537-Webserver/WebServer/RequestProcessor.h
+	"Request.h"
+	"Response.h"
+
+1487476573 /home/pi/csusm/cs537/CS537-Webserver/WebServer/Response.h
+
+1487477829 source:/home/pi/csusm/cs537/CS537-Webserver/WebServer/Response.cpp
+	"Response.h"
+
+1487479463 source:/home/pi/csusm/cs537/CS537-Webserver/WebServer/ResponseGenerator.cpp
+	"ResponseGenerator.h"
+
+1487479621 /home/pi/csusm/cs537/CS537-Webserver/WebServer/ResponseGenerator.h
+	"Request.h"
+	"Response.h"
+
+1487476096 source:/home/pi/csusm/cs537/CS537-Webserver/WebServer/tcpServer.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<errno.h>
+	<pthread.h>
+	<unistd.h>
+	<sys/types.h>
+	<sys/socket.h>
+	<netinet/in.h>
+	"Request.h"
+	"RequestProcessor.h"
+	"Response.h"
+
+1487479260 source:/home/pi/csusm/cs537/CS537-Webserver/WebServer/HttpServer.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<errno.h>
+	<pthread.h>
+	<unistd.h>
+	<sys/types.h>
+	<sys/socket.h>
+	<netinet/in.h>
+	"Request.h"
+	"RequestProcessor.h"
+	"Response.h"
+
+1487480199 source:/home/pi/csusm/cs537/CS537-Webserver/HttpServer.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<errno.h>
+	<pthread.h>
+	<unistd.h>
+	<sys/types.h>
+	<sys/socket.h>
+	<netinet/in.h>
+	"Request.hpp"
+	"RequestProcessor.hpp"
+	"Response.hpp"
+
+1487480131 /home/pi/csusm/cs537/CS537-Webserver/Request.hpp
+
+1487480137 /home/pi/csusm/cs537/CS537-Webserver/RequestProcessor.hpp
+	"Request.hpp"
+	"Response.hpp"
+
+1487480127 /home/pi/csusm/cs537/CS537-Webserver/Response.hpp
+
+1487480185 source:/home/pi/csusm/cs537/CS537-Webserver/Request.cpp
+	"Request.hpp"
+
+1487480180 source:/home/pi/csusm/cs537/CS537-Webserver/RequestProcessor.cpp
+	"RequestProcessor.hpp"
+
+1487480174 source:/home/pi/csusm/cs537/CS537-Webserver/Response.cpp
+	"Response.hpp"
+
+1487480168 source:/home/pi/csusm/cs537/CS537-Webserver/ResponseGenerator.cpp
+	"ResponseGenerator.hpp"
+
+1487480153 /home/pi/csusm/cs537/CS537-Webserver/ResponseGenerator.hpp
+	"Request.hpp"
+	"Response.hpp"
+
