@@ -4,12 +4,10 @@
 #include "Request.hpp"
 #include "Response.hpp"
 
-enum RSP_GENERATOR { GET, POST, HEAD };
-
 class ResponseGenerator
 {
     public:
-        Response generateResponse(Request *request);
+        virtual Response *generateResponse(Request *request) {};
 };
 
 class GetResponseGenerator : public ResponseGenerator
@@ -36,6 +34,6 @@ class DefaultResponseGenerator : public ResponseGenerator
         Response *generateResponse(Request *request);
 };
 
-ResponseGenerator *getResponseGenerator(RSP_GENERATOR generator);
+ResponseGenerator *getResponseGenerator(REQUESTTYPE generator);
 
 #endif // RESPONSEGENERATOR_HPP

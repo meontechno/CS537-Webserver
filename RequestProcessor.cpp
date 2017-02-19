@@ -1,4 +1,5 @@
 #include "RequestProcessor.hpp"
+#include "ResponseGenerator.hpp"
 
 void RequestProcessor::setProcessor(RequestProcessor *processor)
 {
@@ -12,7 +13,8 @@ Response *ParseRequestProcessor::handleRequest(Request *request)
 
 Response *ProcessRequestProcessor::handleRequest(Request *request)
 {
-    return new Response();
+    ResponseGenerator *responseGenerator = getResponseGenerator(request->getRequestType());
+    return responseGenerator->generateResponse(request);
 }
 
 RequestProcessor *getProcessors()

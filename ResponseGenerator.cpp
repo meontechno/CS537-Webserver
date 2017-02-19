@@ -15,7 +15,12 @@ Response *HeadResponseGenerator::generateResponse(Request *request)
     return new Response();
 }
 
-ResponseGenerator *getResponseGenerator(RSP_GENERATOR generator)
+Response *DefaultResponseGenerator::generateResponse(Request *request)
+{
+    return new Response();
+}
+
+ResponseGenerator *getResponseGenerator(REQUESTTYPE generator)
 {
     switch(generator)
     {
