@@ -35,11 +35,10 @@ void *cliSvr(void *arg)
 
     printf("Server:: Here is the message: %s\n",buffer);
 
-    /* Do stuff */
+    /* Process request */
     Request *request = new Request(buffer);
     RequestProcessor *requestProcessors = getProcessors();
     Response *response = requestProcessors->handleRequest(request);
-
 
     /* Send response back to the client */
     n = write(sockfd,"I got your message",18);
@@ -49,6 +48,10 @@ void *cliSvr(void *arg)
         close(sockfd);
         return NULL;
     }
+
+    delete(request);
+    delete(requestProcessors);
+    delete(response);
 
     close(sockfd);
 
