@@ -49,10 +49,6 @@ void *cliSvr(void *arg)
         return NULL;
     }
 
-    delete(request);
-    delete(requestProcessors);
-    delete(response);
-
     close(sockfd);
 
     return NULL;

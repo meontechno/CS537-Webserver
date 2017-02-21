@@ -14,7 +14,7 @@ class RequestProcessor
         void setProcessor(RequestProcessor *processor);
 };
 
-class ParseRequestProcessor : public RequestProcessor
+class ValidateRequestProcessor : public RequestProcessor
 {
     public:
         Response *handleRequest(Request *request);

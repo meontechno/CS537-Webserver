@@ -20,21 +20,21 @@ Response *DefaultResponseGenerator::generateResponse(Request *request)
     return new Response();
 }
 
-ResponseGenerator *getResponseGenerator(REQUESTTYPE generator)
+ResponseGenerator getResponseGenerator(REQUESTTYPE generator)
 {
     switch(generator)
     {
         case GET:
-            return new GetResponseGenerator();
+            return GetResponseGenerator();
             break;
         case POST:
-            return new PostResponseGenerator();
+            return PostResponseGenerator();
             break;
         case HEAD:
-            return new HeadResponseGenerator();
+            return HeadResponseGenerator();
             break;
         default:
-            return new DefaultResponseGenerator();
+            return DefaultResponseGenerator();
             break;
     }
 }
