@@ -1,5 +1,6 @@
 #include "RequestProcessor.hpp"
 #include "ResponseGenerator.hpp"
+#include "Request.hpp"
 #include "Response.hpp"
 
 void RequestProcessor::setProcessor(RequestProcessor *processor)
@@ -9,6 +10,13 @@ void RequestProcessor::setProcessor(RequestProcessor *processor)
 
 Response *ValidateRequestProcessor::handleRequest(Request *request)
 {
+    if(request->getRequestType() == ERROR);
+        //error
+    //else if(request->path == null)
+        //error
+    //else if(request->http == null)
+        //error
+
     return new Response();
 }
 

@@ -1,7 +1,7 @@
 #ifndef REQUEST_HPP
 #define REQUEST_HPP
 
-enum REQUESTTYPE { GET, POST, HEAD };
+enum REQUESTTYPE { GET, POST, HEAD, ERROR };
 
 class Request
 {
@@ -9,6 +9,7 @@ class Request
         REQUESTTYPE requestType;
         char *path;
         char *http;
+        REQUESTTYPE extractRequestType(char *methodLine);
 
     public:
         Request(char *buffer);
