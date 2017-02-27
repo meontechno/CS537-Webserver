@@ -12,22 +12,33 @@ struct STATUS
     string msg;
 };
 
-static STATUS OK = { "200", "OK" };
-static STATUS MOVEDPERM = { "301", "Moved Permanently" };
-static STATUS BADREQUEST = { "400", "Bad Request" };
-static STATUS NOTFOUND = { "404", "Not Found" };
-static STATUS VERNOTSUPPORTED = { "505", "HTTP Version Not Supported" };
+const static string BAD_REQUEST_CD = "400";
+const static string NOT_FOUND_CD = "404";
+
+const static STATUS OK = { "200", "OK" };
+const static STATUS MOVEDPERM = { "301", "Moved Permanently" };
+const static STATUS BADREQUEST = { BAD_REQUEST_CD, "Bad Request" };
+const static STATUS NOTFOUND = { NOT_FOUND_CD, "Not Found" };
+const static STATUS INTERNALERROR = { "500", "Internal Server Error" };
+const static STATUS NOTIMPLEMENTED = { "501", "Not Implemented" };
+const static STATUS VERNOTSUPPORTED = { "505", "HTTP Version Not Supported" };
+
 
 class Response
 {
     private:
+        STATUS status;
         string statusLine;
         stack<string> headerLine;
         string body;
     public:
-        void setStatusLine(STATUS status);
+        void setStatus(STATUS status);
+        STATUS getStatus();
+        string getStatusLine();
         void addToHeaderLine(string line);
         void setBody(string body);
+        string getBody();
+        string getResponseString();
 };
 
 #endif // RESPONSE_HPP

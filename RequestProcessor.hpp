@@ -4,14 +4,19 @@
 #include "Request.hpp"
 #include "Response.hpp"
 
+const string VALID_HTTP = "HTTP/1.0";
+
 class RequestProcessor
 {
     private:
-        RequestProcessor *processor;
+        RequestProcessor *nextProcessor;
+
+    protected:
+        virtual Response *handleRequest(Request *request) {};
 
     public:
-        virtual Response *handleRequest(Request *request) {};
-        void setProcessor(RequestProcessor *processor);
+        Response *process(Request  *request);
+        void setNextProcessor(RequestProcessor *nextProcessor);
 };
 
 class ValidateRequestProcessor : public RequestProcessor

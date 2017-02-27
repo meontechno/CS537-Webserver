@@ -38,10 +38,14 @@ void *cliSvr(void *arg)
     /* Process request */
     Request *request = new Request(buffer);
     RequestProcessor *requestProcessors = getProcessors();
-    Response *response = requestProcessors->handleRequest(request);
-
+    Response *response = requestProcessors->process(request);
+    string responseString = response->getResponseString();
     /* Send response back to the client */
-    n = write(sockfd,"I got your message",18);
+    n = write(sockfd,responseString.c_str(),responseString.size());
+    //n = write(sockfd, "WHAT THE HECKS!",20);
+    //delete request;
+    //delete response;
+
     if (n < 0)  {
         fprintf(stderr, "Error writing to socket, errno = %d (%s)\n",
                 errno, strerror(errno));

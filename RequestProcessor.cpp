@@ -3,21 +3,56 @@
 #include "Request.hpp"
 #include "Response.hpp"
 
-void RequestProcessor::setProcessor(RequestProcessor *processor)
+#include <unistd.h>
+
+Response *RequestProcessor::process(Request  *request)
 {
-    RequestProcessor::processor = processor;
+    Response *response = this->handleRequest(request);
+
+    if(response->getStatus().code != BAD_REQUEST_CD
+        && response->getStatus().code != NOT_FOUND_CD
+        && nextProcessor)
+    {
+        return this->nextProcessor->process(request);
+    }
+
+    return response;
+}
+
+void RequestProcessor::setNextProcessor(RequestProcessor *nextProcessor)
+{
+    RequestProcessor::nextProcessor = nextProcessor;
+}
+
+inline bool isValuesExist(Request *request)
+{
+    if(request->getRequestType() == ERROR ||
+        request->getPath().size() == 0 ||
+        request->getHttp().size() == 0)
+        return false;
+
+    return true;
+}
+
+inline bool isPathExist(const string& path)
+{
+    return (access( path.c_str(), F_OK ) != -1);
 }
 
 Response *ValidateRequestProcessor::handleRequest(Request *request)
 {
-    if(request->getRequestType() == ERROR);
-        //error
-    //else if(request->path == null)
-        //error
-    //else if(request->http == null)
-        //error
+    Response *response = new Response();
 
-    return new Response();
+    if(!isValuesExist(request) || request->getHttp() != VALID_HTTP)
+    {
+        response->setStatus(BADREQUEST);
+    }
+    else if(!isPathExist(request->getPath()))
+    {
+        response->setStatus(NOTFOUND);
+    }
+
+    return response;
 }
 
 Response *ProcessRequestProcessor::handleRequest(Request *request)
@@ -28,11 +63,11 @@ Response *ProcessRequestProcessor::handleRequest(Request *request)
 
 RequestProcessor *getProcessors()
 {
-    RequestProcessor *requestParser = new ValidateRequestProcessor();
-    RequestProcessor *requestProcessor = new ProcessRequestProcessor();
+    RequestProcessor *validateRequest = new ValidateRequestProcessor();
+    RequestProcessor *processRequest = new ProcessRequestProcessor();
 
-    requestParser->setProcessor(requestProcessor);
+    validateRequest->setNextProcessor(processRequest);
 
-    return requestParser;
+    return validateRequest;
 }
 
