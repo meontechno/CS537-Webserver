@@ -2,7 +2,7 @@
 #define RESPONSE_HPP
 
 #include <string>
-#include <stack>
+#include <queue>
 
 using namespace std;
 
@@ -29,15 +29,15 @@ class Response
     private:
         STATUS status;
         string statusLine;
-        stack<string> headerLine;
-        string body;
+        queue<string> headerLine;
+        char *body;
     public:
         void setStatus(STATUS status);
         STATUS getStatus();
         string getStatusLine();
         void addToHeaderLine(string line);
-        void setBody(string body);
-        string getBody();
+        void setBody(char *body);
+        char *getBody();
         string getResponseString();
 };
 

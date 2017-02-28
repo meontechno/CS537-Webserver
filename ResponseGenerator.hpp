@@ -7,7 +7,8 @@
 class ResponseGenerator
 {
     public:
-        virtual Response *generateResponse(Request *request) {};
+        virtual Response *generateResponse(Request *request) = 0;
+        virtual ~ResponseGenerator() {};
 };
 
 class GetResponseGenerator : public ResponseGenerator
@@ -34,6 +35,6 @@ class DefaultResponseGenerator : public ResponseGenerator
         Response *generateResponse(Request *request);
 };
 
-ResponseGenerator getResponseGenerator(REQUESTTYPE generator);
+ResponseGenerator *getResponseGenerator(REQUESTTYPE generator);
 
 #endif // RESPONSEGENERATOR_HPP

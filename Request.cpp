@@ -1,4 +1,6 @@
 #include "Request.hpp"
+#include <cstdlib>
+#include <cstring>
 #include <string>
 #include <queue>
 #include <iostream>
@@ -13,8 +15,16 @@ Request::Request(char *buffer)
     string requestSubStr;
 
     /* Create a queue of each line of the request based on the delimited (\r\n) */
-    while((pos = requestStream.find(REQ_DELIMITER)) != string::npos)
+    while(requestStream.size() > 0)
     {
+        pos = requestStream.find(REQ_DELIMITER);
+
+        if(pos == string::npos) {
+            requestLines.push(requestStream);
+            requestStream.clear();
+            break;
+        }
+
         requestSubStr = requestStream.substr(0, pos);
         requestLines.push(requestSubStr);
         requestStream.erase(0, pos + REQ_DELIMITER.length());
@@ -22,8 +32,6 @@ Request::Request(char *buffer)
 
     if(requestLines.size() == 0)
         return;
-
-    requestStream.clear();
 
     string requestLine = requestLines.front();
     requestLines.pop();
@@ -40,8 +48,6 @@ Request::Request(char *buffer)
     this->requestType = this->extractRequestType(requestSubStr);
     requestLine.erase(0, pos + REQ_LINE_DELIMITER.length());
 
-    cout << "Request Type: " << requestSubStr << " enum: " << this->requestType << endl;
-
     /* Extract the requested path that is expected to be the second string within the request line. */
     pos = requestLine.find(REQ_LINE_DELIMITER);
 
@@ -50,27 +56,24 @@ Request::Request(char *buffer)
     }
 
     requestSubStr = requestLine.substr(0, pos);
-    this->path = requestSubStr;
+    string basePath(getenv("PWD"));
+    this->path = basePath + requestSubStr;
     requestLine.erase(0, pos + REQ_LINE_DELIMITER.length());
 
-    cout << "Path Type: " << requestSubStr << " value set: " << this->path << endl;
-
-     /* Extract the http version that is expected to be the third (remaining) string within the request line. */
+    /* Extract the http version that is expected to be the third (remaining) string within the request line. */
     this->http = requestLine;
     requestLine.clear();
 
-    cout << "Http Type: " << requestSubStr << " value set: " << this->http << endl;
-
     /* Extract headers */
-    for(int count = 0; count < requestLines.size(); count++)
+    int requestLineSize = requestLines.size();
+    for(int count = 0; count < requestLineSize; count++)
     {
         requestLine = requestLines.front();
+        this->headers.push_back(requestLine);
         requestLines.pop();
         // headers end after a line with only \r\n
-        if(requestLine == " ")
+        if(requestLine == REQ_DELIMITER)
             break;
-
-        cout << "Header" << count << ": " << requestLine << endl;
     }
 
     /* Extract body if exist */
@@ -81,8 +84,6 @@ Request::Request(char *buffer)
         requestLines.pop();
     }
     this->body = requestBody;
-
-    cout << "Body: " << this->body << endl;
 }
 
 REQUESTTYPE Request::extractRequestType(string method)

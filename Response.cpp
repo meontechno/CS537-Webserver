@@ -1,4 +1,8 @@
 #include "Response.hpp"
+#include "Request.hpp"
+#include <string>
+
+using namespace std;
 
 void Response::setStatus(STATUS status)
 {
@@ -12,7 +16,7 @@ STATUS Response::getStatus()
 
 string Response::getStatusLine()
 {
-    return Response::statusLine = "HTTP/1.0 " + this->getStatus().code + " " + this->getStatus().msg + "\r\n";
+    return Response::statusLine = "HTTP/1.1 " + this->getStatus().code + " " + this->getStatus().msg + REQ_DELIMITER;
 }
 
 void Response::addToHeaderLine(string line)
@@ -20,17 +24,31 @@ void Response::addToHeaderLine(string line)
     Response::headerLine.push(line);
 }
 
-void Response::setBody(string body)
+void Response::setBody(char *body)
 {
     Response::body = body;
 }
 
-string Response::getBody()
+char *Response::getBody()
 {
     return Response::body;
 }
 
 string Response::getResponseString()
 {
-   return getStatusLine();
+    string response = "";
+    response += this->getStatusLine();
+
+    while(!this->headerLine.empty())
+    {
+        response += headerLine.front();
+        headerLine.pop();
+    }
+
+    /*if(!this->getBody().empty())
+    {
+        response += this->getBody();
+    }*/
+
+    return response;
 }

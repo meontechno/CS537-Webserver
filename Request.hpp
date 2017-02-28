@@ -6,7 +6,7 @@
 
 using namespace std;
 
-const string REQ_DELIMITER = "\\r\\n";
+const string REQ_DELIMITER = "\r\n";
 const string REQ_LINE_DELIMITER = " ";
 
 enum REQUESTTYPE { ERROR, GET, POST, HEAD };

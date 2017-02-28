@@ -12,11 +12,13 @@ class RequestProcessor
         RequestProcessor *nextProcessor;
 
     protected:
-        virtual Response *handleRequest(Request *request) {};
+        virtual Response *handleRequest(Request *request) = 0;
 
     public:
+        RequestProcessor();
         Response *process(Request  *request);
         void setNextProcessor(RequestProcessor *nextProcessor);
+        virtual ~RequestProcessor() {};
 };
 
 class ValidateRequestProcessor : public RequestProcessor
@@ -30,7 +32,5 @@ class ProcessRequestProcessor : public RequestProcessor
     public:
         Response *handleRequest(Request *request);
 };
-
-RequestProcessor *getProcessors();
 
 #endif // REQUESTPROCESSOR_HPP

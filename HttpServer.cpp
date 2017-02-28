@@ -1,5 +1,8 @@
 /* A simple server in the internet domain using TCP
    The port number is passed as an argument */
+#include <string>
+#include <iostream>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,9 +17,9 @@
 #include "RequestProcessor.hpp"
 #include "Response.hpp"
 
+
 void *cliSvr(void *arg)
 {
-
     int   n, sockfd;
     char  buffer[256];
 
@@ -37,14 +40,17 @@ void *cliSvr(void *arg)
 
     /* Process request */
     Request *request = new Request(buffer);
-    RequestProcessor *requestProcessors = getProcessors();
-    Response *response = requestProcessors->process(request);
-    string responseString = response->getResponseString();
-    /* Send response back to the client */
-    n = write(sockfd,responseString.c_str(),responseString.size());
-    //n = write(sockfd, "WHAT THE HECKS!",20);
-    //delete request;
-    //delete response;
+
+    /* Set up processors to process request */
+    RequestProcessor *validateRequest = new ValidateRequestProcessor();
+    RequestProcessor *processRequest = new ProcessRequestProcessor();
+    validateRequest->setNextProcessor(processRequest);
+
+    /* Obtain response from processed request */
+    Response *response = validateRequest->process(request);
+
+    /* Send header to the client */
+    n = send(sockfd,response->getResponseString().c_str(),response->getResponseString().size(), 0);
 
     if (n < 0)  {
         fprintf(stderr, "Error writing to socket, errno = %d (%s)\n",
@@ -53,10 +59,27 @@ void *cliSvr(void *arg)
         return NULL;
     }
 
+    /* Send body to the client */
+    if(sizeof(response->getBody()) > 0) {
+        n = send(sockfd,response->getBody(),sizeof(response->getBody()), 0);
+
+        if (n < 0)  {
+            fprintf(stderr, "Error writing to socket, errno = %d (%s)\n",
+                    errno, strerror(errno));
+            close(sockfd);
+            return NULL;
+        }
+    }
+
+     /* Clear resources */
+    delete request;
+    delete validateRequest;
+    delete processRequest;
+    delete response;
+
     close(sockfd);
 
     return NULL;
-
 }
 
 

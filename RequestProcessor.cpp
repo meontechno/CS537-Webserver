@@ -3,7 +3,14 @@
 #include "Request.hpp"
 #include "Response.hpp"
 
+#include <cstdlib>
+#include <cstring>
 #include <unistd.h>
+
+RequestProcessor::RequestProcessor()
+{
+    nextProcessor = NULL;
+}
 
 Response *RequestProcessor::process(Request  *request)
 {
@@ -11,7 +18,7 @@ Response *RequestProcessor::process(Request  *request)
 
     if(response->getStatus().code != BAD_REQUEST_CD
         && response->getStatus().code != NOT_FOUND_CD
-        && nextProcessor)
+        && nextProcessor != NULL)
     {
         return this->nextProcessor->process(request);
     }
@@ -26,9 +33,11 @@ void RequestProcessor::setNextProcessor(RequestProcessor *nextProcessor)
 
 inline bool isValuesExist(Request *request)
 {
-    if(request->getRequestType() == ERROR ||
-        request->getPath().size() == 0 ||
-        request->getHttp().size() == 0)
+    bool requestTypeExist = request->getRequestType() == ERROR;
+    bool pathExist = request->getPath().size() == 0;
+    bool httpVersionExist = request->getHttp().size() == 0;
+
+    if(requestTypeExist || pathExist || httpVersionExist)
         return false;
 
     return true;
@@ -43,7 +52,7 @@ Response *ValidateRequestProcessor::handleRequest(Request *request)
 {
     Response *response = new Response();
 
-    if(!isValuesExist(request) || request->getHttp() != VALID_HTTP)
+    if(!isValuesExist(request)) //|| request->getHttp() != VALID_HTTP)
     {
         response->setStatus(BADREQUEST);
     }
@@ -57,17 +66,8 @@ Response *ValidateRequestProcessor::handleRequest(Request *request)
 
 Response *ProcessRequestProcessor::handleRequest(Request *request)
 {
-    ResponseGenerator responseGenerator = getResponseGenerator(request->getRequestType());
-    return responseGenerator.generateResponse(request);
+    ResponseGenerator *responseGenerator = getResponseGenerator(request->getRequestType());
+    Response *response = responseGenerator->generateResponse(request);
+    delete responseGenerator;
+    return response;
 }
-
-RequestProcessor *getProcessors()
-{
-    RequestProcessor *validateRequest = new ValidateRequestProcessor();
-    RequestProcessor *processRequest = new ProcessRequestProcessor();
-
-    validateRequest->setNextProcessor(processRequest);
-
-    return validateRequest;
-}
-
