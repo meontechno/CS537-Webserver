@@ -50,7 +50,7 @@ void *cliSvr(void *arg)
     Response *response = validateRequest->process(request);
 
     /* Send header to the client */
-    n = send(sockfd,response->getResponseString().c_str(),response->getResponseString().size(), 0);
+    n = send(sockfd,response->getResponseString().data(),response->getResponseString().size(), 0);
 
     if (n < 0)  {
         fprintf(stderr, "Error writing to socket, errno = %d (%s)\n",
@@ -60,8 +60,8 @@ void *cliSvr(void *arg)
     }
 
     /* Send body to the client */
-    if(sizeof(response->getBody()) > 0) {
-        n = send(sockfd,response->getBody(),sizeof(response->getBody()), 0);
+    /*if(sizeof(response->getBody()) > 0) {
+        n = send(sockfd,response->getBody().,sizeof(response->getBody()), 0);
 
         if (n < 0)  {
             fprintf(stderr, "Error writing to socket, errno = %d (%s)\n",
@@ -69,7 +69,7 @@ void *cliSvr(void *arg)
             close(sockfd);
             return NULL;
         }
-    }
+    }*/
 
      /* Clear resources */
     delete request;

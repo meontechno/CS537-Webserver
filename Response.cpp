@@ -45,10 +45,10 @@ string Response::getResponseString()
         headerLine.pop();
     }
 
-    /*if(!this->getBody().empty())
+    if(!this->getBody().empty())
     {
         response += this->getBody();
-    }*/
+    }
 
     return response;
 }
