@@ -50,7 +50,9 @@ void *cliSvr(void *arg)
     Response *response = validateRequest->process(request);
 
     /* Send header to the client */
-    n = send(sockfd,response->getResponseString().data(),response->getResponseString().size(), 0);
+    cout << "Header Sending..: " << response->getResponseString().c_str() << endl << "Header Size..: " << response->getResponseString().size();
+
+    n = write(sockfd,response->getResponseString().data(),response->getResponseString().size());
 
     if (n < 0)  {
         fprintf(stderr, "Error writing to socket, errno = %d (%s)\n",
@@ -59,23 +61,21 @@ void *cliSvr(void *arg)
         return NULL;
     }
 
-    /* Send body to the client */
-    /*if(sizeof(response->getBody()) > 0) {
-        n = send(sockfd,response->getBody().,sizeof(response->getBody()), 0);
-
-        if (n < 0)  {
-            fprintf(stderr, "Error writing to socket, errno = %d (%s)\n",
-                    errno, strerror(errno));
-            close(sockfd);
-            return NULL;
-        }
-    }*/
-
      /* Clear resources */
     delete request;
     delete validateRequest;
     delete processRequest;
     delete response;
+
+    shutdown(sockfd, SHUT_WR);
+
+    char recbuffer[256];
+    int bytesRead;
+    while((bytesRead = recv(sockfd, recbuffer, 256, 0)) > 0) {}
+
+    if(bytesRead < 0) {
+        perror("Socket read error");
+    }
 
     close(sockfd);
 

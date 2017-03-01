@@ -17,26 +17,47 @@ Response *GetResponseGenerator::generateResponse(Request *request)
     if(fileToRead.is_open())
     {
         /* Get file data */
+        fileToRead.seekg(0, ios::end);
         fileSize = fileToRead.tellg();
+        char *fileDataBuff = new char[fileSize];
         fileToRead.seekg(0, ios::beg);
-        response->setBody(new char[fileSize]);
-        fileToRead.read(response->getBody(), fileSize);
+        fileToRead.read(fileDataBuff, fileSize);
         fileToRead.close();
+        response->setBody(string(fileDataBuff));
+        delete fileDataBuff;
 
-        /* Sent response header lines */
-        response->setStatus(OK);
+        cout << "Response File Size: " << fileSize << endl;
+
+        /* Set values for response header lines */
         time_t currentTime = time(0);
         stringstream timeStream;
         timeStream << ctime(&currentTime);
-        response->addToHeaderLine("Connection: Closed" + REQ_DELIMITER);
-        response->addToHeaderLine("Date: " + timeStream.str());
+        string time = timeStream.str();
+        size_t pos = time.find("\n");
+        if(pos != string::npos) {
+            time.erase(pos, time.size());
+        }
+
+        stringstream bodySizeStream;
+        bodySizeStream << fileSize;
+
+        /* Sent response header lines */
+        response->setStatus(OK);
+        response->addToHeaderLine("Date: " + time + REQ_DELIMITER);
         response->addToHeaderLine("Server: Customized" + REQ_DELIMITER);
         response->addToHeaderLine("Last-Modified: Wed, 22 Jul 2009 19:15:56 GMT" + REQ_DELIMITER);
-        ostringstream convertIntToString;
-        convertIntToString << sizeof(response->getBody());
-        response->addToHeaderLine("Content-Length: " + convertIntToString.str() + REQ_DELIMITER);
-        response->addToHeaderLine("Content-Type: text/html" + REQ_DELIMITER);
+        response->addToHeaderLine("Content-Length: " + bodySizeStream.str() + REQ_DELIMITER);
+        response->addToHeaderLine("Content-Type: text/html; charset=iso-8859-1" + REQ_DELIMITER);
+        response->addToHeaderLine("Connection: Closed" + REQ_DELIMITER);
         response->addToHeaderLine(REQ_DELIMITER);
+
+        /* Clear stringstreams */
+        timeStream.str(string());
+        timeStream.clear();
+
+        bodySizeStream.str(string());
+        bodySizeStream.clear();
+
         return response;
     }
 

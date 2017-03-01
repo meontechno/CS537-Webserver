@@ -29,15 +29,15 @@ class Response
     private:
         STATUS status;
         string statusLine;
-        queue<string> headerLine;
-        char *body;
+        string headerLines;
+        string body;
     public:
         void setStatus(STATUS status);
         STATUS getStatus();
         string getStatusLine();
         void addToHeaderLine(string line);
-        void setBody(char *body);
-        char *getBody();
+        void setBody(string body);
+        string getBody();
         string getResponseString();
 };
 

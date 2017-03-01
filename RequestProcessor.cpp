@@ -45,7 +45,8 @@ inline bool isValuesExist(Request *request)
 
 inline bool isPathExist(const string& path)
 {
-    return (access( path.c_str(), F_OK ) != -1);
+    string basePath(getenv("PWD"));
+    return (access( path.c_str(), F_OK ) != -1) && (path.compare(basePath + "/") != 0);
 }
 
 Response *ValidateRequestProcessor::handleRequest(Request *request)
