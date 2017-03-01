@@ -156,7 +156,7 @@
 	<cstring>
 	<unistd.h>
 
-1488351525 source:/home/pi/csusm/CS537/yo/CS537-Webserver/HttpServer.cpp
+1488362675 source:/home/pi/csusm/CS537/yo/CS537-Webserver/HttpServer.cpp
 	<string>
 	<iostream>
 	<stdio.h>
@@ -176,15 +176,15 @@
 	<string>
 	<vector>
 
-1488331990 /home/pi/csusm/CS537/yo/CS537-Webserver/RequestProcessor.hpp
+1488362707 /home/pi/csusm/CS537/yo/CS537-Webserver/RequestProcessor.hpp
 	"Request.hpp"
 	"Response.hpp"
 
-1488348948 /home/pi/csusm/CS537/yo/CS537-Webserver/Response.hpp
+1488363050 /home/pi/csusm/CS537/yo/CS537-Webserver/Response.hpp
 	<string>
 	<queue>
 
-1488331990 source:/home/pi/csusm/CS537/yo/CS537-Webserver/Request.cpp
+1488361241 source:/home/pi/csusm/CS537/yo/CS537-Webserver/Request.cpp
 	"Request.hpp"
 	<cstdlib>
 	<cstring>
@@ -192,28 +192,32 @@
 	<queue>
 	<iostream>
 
-1488346519 source:/home/pi/csusm/CS537/yo/CS537-Webserver/RequestProcessor.cpp
+1488363031 source:/home/pi/csusm/CS537/yo/CS537-Webserver/RequestProcessor.cpp
 	"RequestProcessor.hpp"
 	"ResponseGenerator.hpp"
 	"Request.hpp"
 	"Response.hpp"
+	<iostream>
 	<cstdlib>
 	<cstring>
 	<unistd.h>
 
-1488331990 /home/pi/csusm/CS537/yo/CS537-Webserver/ResponseGenerator.hpp
+1488353754 /home/pi/csusm/CS537/yo/CS537-Webserver/ResponseGenerator.hpp
 	"Request.hpp"
 	"Response.hpp"
 
-1488349112 source:/home/pi/csusm/CS537/yo/CS537-Webserver/Response.cpp
+1488362698 source:/home/pi/csusm/CS537/yo/CS537-Webserver/Response.cpp
 	"Response.hpp"
 	"Request.hpp"
+	<fstream>
 	<iostream>
+	<sstream>
 	<string>
 
-1488349139 source:/home/pi/csusm/CS537/yo/CS537-Webserver/ResponseGenerator.cpp
+1488362959 source:/home/pi/csusm/CS537/yo/CS537-Webserver/ResponseGenerator.cpp
 	"ResponseGenerator.hpp"
 	"Request.hpp"
+	<cstdlib>
 	<ctime>
 	<fstream>
 	<iostream>

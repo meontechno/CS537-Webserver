@@ -49,9 +49,7 @@ void *cliSvr(void *arg)
     /* Obtain response from processed request */
     Response *response = validateRequest->process(request);
 
-    /* Send header to the client */
-    cout << "Header Sending..: " << response->getResponseString().c_str() << endl << "Header Size..: " << response->getResponseString().size();
-
+    /* Send response to the client */
     n = write(sockfd,response->getResponseString().data(),response->getResponseString().size());
 
     if (n < 0)  {
@@ -67,6 +65,7 @@ void *cliSvr(void *arg)
     delete processRequest;
     delete response;
 
+    /* Process remainder of communication bytes and close connection */
     shutdown(sockfd, SHUT_WR);
 
     char recbuffer[256];

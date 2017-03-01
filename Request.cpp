@@ -69,11 +69,13 @@ Request::Request(char *buffer)
     for(int count = 0; count < requestLineSize; count++)
     {
         requestLine = requestLines.front();
-        this->headers.push_back(requestLine);
-        requestLines.pop();
-        // headers end after a line with only \r\n
+
+        /* headers end after a line with only \r\n */
         if(requestLine == REQ_DELIMITER)
             break;
+
+        this->headers.push_back(requestLine);
+        requestLines.pop();
     }
 
     /* Extract body if exist */

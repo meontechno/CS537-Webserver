@@ -1,6 +1,7 @@
 #include "ResponseGenerator.hpp"
 #include "Request.hpp"
 
+#include <cstdlib>
 #include <ctime>
 #include <fstream>
 #include <iostream>
@@ -12,56 +13,20 @@ using namespace std;
 Response *GetResponseGenerator::generateResponse(Request *request)
 {
     Response *response = new Response();
-    long fileSize;
-    ifstream fileToRead (request->getPath().c_str());
-    if(fileToRead.is_open())
-    {
-        /* Get file data */
-        fileToRead.seekg(0, ios::end);
-        fileSize = fileToRead.tellg();
-        char *fileDataBuff = new char[fileSize];
-        fileToRead.seekg(0, ios::beg);
-        fileToRead.read(fileDataBuff, fileSize);
-        fileToRead.close();
-        response->setBody(string(fileDataBuff));
-        delete fileDataBuff;
+    /* Sets up response content */
+    response->setContent(request->getPath());
 
-        cout << "Response File Size: " << fileSize << endl;
-
-        /* Set values for response header lines */
-        time_t currentTime = time(0);
-        stringstream timeStream;
-        timeStream << ctime(&currentTime);
-        string time = timeStream.str();
-        size_t pos = time.find("\n");
-        if(pos != string::npos) {
-            time.erase(pos, time.size());
-        }
-
-        stringstream bodySizeStream;
-        bodySizeStream << fileSize;
-
-        /* Sent response header lines */
+    /*  Check whether content was successful set */
+    if(!response->getContent().empty()) {
         response->setStatus(OK);
-        response->addToHeaderLine("Date: " + time + REQ_DELIMITER);
-        response->addToHeaderLine("Server: Customized" + REQ_DELIMITER);
-        response->addToHeaderLine("Last-Modified: Wed, 22 Jul 2009 19:15:56 GMT" + REQ_DELIMITER);
-        response->addToHeaderLine("Content-Length: " + bodySizeStream.str() + REQ_DELIMITER);
-        response->addToHeaderLine("Content-Type: text/html; charset=iso-8859-1" + REQ_DELIMITER);
-        response->addToHeaderLine("Connection: Closed" + REQ_DELIMITER);
-        response->addToHeaderLine(REQ_DELIMITER);
-
-        /* Clear stringstreams */
-        timeStream.str(string());
-        timeStream.clear();
-
-        bodySizeStream.str(string());
-        bodySizeStream.clear();
-
-        return response;
+    }
+    /* If body was not set successfully an error response is sent back */
+    else {
+        response->setStatus(INTERNALERROR);
+        response->setContent(string(getenv("PWD")) + "/internalerror.html");
     }
 
-    response->setStatus(INTERNALERROR);
+    response->setHeaderLines();
     return response;
 }
 
@@ -77,23 +42,54 @@ Response *PostResponseGenerator::generateResponse(Request *request)
             fileToWrite << request->getBody().c_str();
             fileToWrite.close();
             response->setStatus(OK);
-            return response;
+            response->setContent(string(getenv("PWD")) + "/getfile.html");
         }
     }
+    else {
+        response->setStatus(BADREQUEST);
+        response->setContent(string(getenv("PWD")) + "/badrequest.html");
+    }
 
-    response->setStatus(INTERNALERROR);
+    response->setHeaderLines();
     return response;
 }
 
 Response *HeadResponseGenerator::generateResponse(Request *request)
 {
-    return new Response();
+    Response *response = new Response();
+
+    /* Sets up response content information*/
+    ifstream fileToRead (request->getPath().c_str());
+    if(fileToRead.is_open())
+    {
+        /* Get content size */
+        fileToRead.seekg(0, ios::end);
+        long fileSize = fileToRead.tellg();
+
+        /* Set content-length size */
+        stringstream contentSizeStream;
+        contentSizeStream << fileSize;
+        response->addToHeaderLine("Content-Length: " + contentSizeStream.str() + REQ_DELIMITER);
+        contentSizeStream.str(string());
+        contentSizeStream.clear();
+
+        response->setStatus(OK);
+    }
+    else {
+        response->setStatus(INTERNALERROR);
+        response->setContent(string(getenv("PWD")) + "/internalerror.html");
+    }
+
+    response->setHeaderLines();
+    return response;
 }
 
 Response *DefaultResponseGenerator::generateResponse(Request *request)
 {
     Response *response = new Response();
     response->setStatus(NOTIMPLEMENTED);
+    response->setContent(string(getenv("PWD")) + "/notimplemented.html");
+    response->setHeaderLines();
     return response;
 }
 
