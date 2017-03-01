@@ -47,7 +47,7 @@ string Response::getResponseString()
 
     if(!this->getBody().empty())
     {
-        response += this->getBody();
+        response += string(this->getBody());
     }
 
     return response;
